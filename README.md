@@ -31,6 +31,15 @@
 
 This section intentionally blank. Students must complete it with instructions on how to use the code in their project.
 
+1. Set up git lfs
+    - git lfs install (essential per repo and per machine)
+    - git lfs fetch --all (get all data from lfs essential for project)
+2. Set up Hive's HDFS accesss
+    - run "kinit gaspar-account" in terminal
+    - enter password (although UI does not show any letters)
+    - verify you got ticket by running "klist -a" in terminal
+    - run prepare-env.md
+3. Run import.ipynb
 ----
 ## Important Dates
 
