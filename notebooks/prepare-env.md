@@ -164,5 +164,13 @@ SELECT * FROM ${USERNAME:-nobody}.sbb_stops_orc LIMIT 5;
 ```
 
 ```bash
+git lfs install
+```
+
+```bash
+git lfs track "/data/*.txt"
+```
+
+```bash
 
 ```
