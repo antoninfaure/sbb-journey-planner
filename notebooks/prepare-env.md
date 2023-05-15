@@ -167,19 +167,19 @@ SELECT * FROM ${USERNAME:-nobody}.sbb_stops_orc LIMIT 5;
 beeline -u "${HIVE_JDBC_URL}" --silent -e "
 USE ${USERNAME:-nobody};
 
-DROP TABLE IF EXISTS ${USERNAME:-nobody}.sbb_timetables_orc;
+DROP TABLE IF EXISTS ${USERNAME:-nobody}.sbb_stop_times_orc;
 
-CREATE EXTERNAL TABLE ${USERNAME:-nobody}.sbb_timetables_orc(
+CREATE EXTERNAL TABLE ${USERNAME:-nobody}.sbb_stop_times_orc(
         trip_id STRING,
         arrival_time STRING,
         departure_time STRING,
         stop_id STRING,
-        stop_sequence FLOAT,
-        pickup_type BOOLEAN,
-        drop_off_type BOOLEAN
+        stop_sequence STRING,
+        pickup_type STRING,
+        drop_off_type STRING
     )
     STORED AS ORC
-    LOCATION '/data/sbb/part_orc/timetables';
+    LOCATION '/data/sbb/part_orc/timetables/stop_times';
 "
 ```
 
@@ -187,7 +187,38 @@ CREATE EXTERNAL TABLE ${USERNAME:-nobody}.sbb_timetables_orc(
 beeline -u "${HIVE_JDBC_URL}" --silent -e "
 USE ${USERNAME:-nobody};
 
-SELECT * FROM ${USERNAME:-nobody}.sbb_timetables_orc LIMIT 5;
+SELECT * FROM ${USERNAME:-nobody}.sbb_stop_times_orc LIMIT 5;
+"
+```
+
+```bash
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+DROP TABLE IF EXISTS ${USERNAME:-nobody}.sbb_calendar_orc;
+
+CREATE EXTERNAL TABLE ${USERNAME:-nobody}.sbb_calendar_orc(
+        service_id STRING,
+        monday STRING,
+        tuesday STRING,
+        wednesday STRING,
+        thursday STRING,
+        friday STRING,
+        saturday STRING,
+        sunday STRING,
+        start_date STRING,
+        end_date STRING
+    )
+    STORED AS ORC
+    LOCATION '/data/sbb/part_orc/timetables/calendar';
+"
+```
+
+```bash
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+SELECT * FROM ${USERNAME:-nobody}.sbb_calendar_orc LIMIT 5;
 "
 ```
 
