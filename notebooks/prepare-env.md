@@ -164,13 +164,33 @@ SELECT * FROM ${USERNAME:-nobody}.sbb_stops_orc LIMIT 5;
 ```
 
 ```bash
-git lfs install
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+DROP TABLE IF EXISTS ${USERNAME:-nobody}.sbb_timetables_orc;
+
+CREATE EXTERNAL TABLE ${USERNAME:-nobody}.sbb_timetables_orc(
+        trip_id STRING,
+        arrival_time STRING,
+        departure_time STRING,
+        stop_id STRING,
+        stop_sequence FLOAT,
+        pickup_type BOOLEAN,
+        drop_off_type BOOLEAN
+    )
+    STORED AS ORC
+    LOCATION '/data/sbb/part_orc/timetables';
+"
 ```
 
 ```bash
-git lfs track "/data/*.txt"
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+SELECT * FROM ${USERNAME:-nobody}.sbb_timetables_orc LIMIT 5;
+"
 ```
 
 ```bash
-
+#git lfs track "/data/*.txt"
 ```
