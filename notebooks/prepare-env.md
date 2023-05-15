@@ -136,6 +136,16 @@ CREATE EXTERNAL TABLE ${USERNAME:-nobody}.sbb_orc(
 beeline -u "${HIVE_JDBC_URL}" --silent -e "SELECT * FROM ${USERNAME:-nobody}.sbb_orc LIMIT 1;"
 ```
 
+8. get timetable data:
+    - stops
+    - stop_times
+    - calendar
+    - trips
+    - transfers
+    - calendar_dates (DOES NOT EXIST IN HDFS?)
+    - data not used by the example repo:
+        - routes TODO
+
 ```bash
 beeline -u "${HIVE_JDBC_URL}" --silent -e "
 USE ${USERNAME:-nobody};
@@ -219,6 +229,81 @@ beeline -u "${HIVE_JDBC_URL}" --silent -e "
 USE ${USERNAME:-nobody};
 
 SELECT * FROM ${USERNAME:-nobody}.sbb_calendar_orc LIMIT 5;
+"
+```
+
+```bash
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+DROP TABLE IF EXISTS ${USERNAME:-nobody}.sbb_trips_orc;
+
+CREATE EXTERNAL TABLE ${USERNAME:-nobody}.sbb_trips_orc(
+        route_id STRING,
+        service_id STRING,
+        trip_id STRING,
+        trip_headsign STRING,
+        trip_short_name STRING,
+        direction_id STRING
+    )
+    STORED AS ORC
+    LOCATION '/data/sbb/part_orc/timetables/trips';
+"
+```
+
+```bash
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+SELECT * FROM ${USERNAME:-nobody}.sbb_trips_orc LIMIT 5;
+"
+```
+
+```bash
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+DROP TABLE IF EXISTS ${USERNAME:-nobody}.sbb_transfers_orc;
+
+CREATE EXTERNAL TABLE ${USERNAME:-nobody}.sbb_transfers_orc(
+        from_stop_id STRING,
+        to_stop_id STRING,
+        transfer_type STRING,
+        min_transfer_time STRING
+    )
+    STORED AS ORC
+    LOCATION '/data/sbb/part_orc/timetables/transfers';
+"
+```
+
+```bash
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+SELECT * FROM ${USERNAME:-nobody}.sbb_transfers_orc LIMIT 5;
+"
+```
+
+```bash
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+DROP TABLE IF EXISTS ${USERNAME:-nobody}.sbb_calendar_dates_orc;
+
+CREATE EXTERNAL TABLE ${USERNAME:-nobody}.sbb_calendar_dates_orc(
+        service_id STRING,
+        date STRING,
+        exception_type STRING
+    )
+    STORED AS ORC
+    LOCATION '/data/sbb/part_orc/timetables/calendar_dates';
+```
+
+```bash
+beeline -u "${HIVE_JDBC_URL}" --silent -e "
+USE ${USERNAME:-nobody};
+
+SELECT * FROM ${USERNAME:-nobody}.sbb_calendar_dates_orc LIMIT 5;
 "
 ```
 
